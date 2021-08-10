@@ -1,4 +1,4 @@
-# PatientBookingSystem
+# Patient Booking System - C4Model
 
 # Introduction
 
