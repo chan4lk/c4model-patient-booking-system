@@ -8,9 +8,9 @@ Person(doc, "Doctor", "A doctor of the clinic, who is viewing appointments, pati
 Person(admin, "Admin", "A manager of the clinic, who is managing appointments.")
 System_Ext(es, "E-mail system", "The internal Microsoft Exchange e-mail system.")
 System_Ext(xero, "Xero Central", "Invoicing and quoting for work, customising invoices, managing payments, reporting on sales.")
+System_Ext(db, "SharePoint", "Stores patient history, appointment details, doctor information, etc.")
 System_Boundary(pbs, "Patient Booking System") {    
     Container(spa, "Single Page Application", "Azure Static Site(NextJS)", "Provides all the booking functionality to patients via their web browser.")
-    Container(db, "SharePoint", "SharePoint Lists and Event Calendar", "Stores patient history, appointment details, doctor information, etc.")
     Container(api, "API Application", "Azure Functions", "Provides internet booking functionality via Micrsoft Graph API.")
     Container(spfx, "SPFX Application", "Webpart page", "Provides acesses to patient information to doctors and admin.")
 
@@ -21,9 +21,9 @@ System_Boundary(pbs, "Patient Booking System") {
 
 }
 
-Rel(pbc, pbs, "Uses")
-Rel(doc, pbs, "Uses")
-Rel(admin, pbs, "Uses")
+Rel(pbc, spa, "Uses")
+Rel(doc, spfx, "Uses")
+Rel(admin, spfx, "Uses")
 Rel(es, pbc, "Sends e-mails to")
 Rel(es, doc, "Sends e-mails to")
 Rel(api, xero, "Sends invoices to")
