@@ -1,0 +1,35 @@
+@startuml
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(pbc, "Patient", "A customer of the clinic, who is scheduling an appointment.")
+Person(doc, "Doctor", "A doctor of the clinic, who is viewing appointments, patient history.")
+Person(admin, "Admin", "A manager of the clinic, who is managing appointments.")
+System_Ext(es, "E-mail system", "The external e-mail system (SendGrid).")
+System_Ext(xero, "Xero Central", "Invoicing and quoting for work, customising invoices, managing payments, reporting on sales.")
+System_Ext(ad, "Azure AD", "Microsoft Identity Platform.")
+
+System_Boundary(pbs, "Patient Booking System") {    
+    Container(spa, "Patient Booking Client", "Azure Static Site(NextJS)", "Provides all the booking functionality to patients via their web browser.")
+    Container(api, "API Application", "Azure Functions", "Provides internet booking functionality.")
+    Container(spfx, "Patient Booking Admin", "Azure Static Site(NextJS)", "Provides acesses to patient information to doctors and admin.")
+    Container(db, "Database System", "SQL Server/CosmosDB", "Stores patient history, appointment details, doctor information, etc.")
+    
+    
+    Rel(api, es, "Sends e-mails", "MS Flow")
+    Rel(api, db, "Reads & writes to", "SQL")
+    Rel(spa, api, "Uses", "JSON/HTTPS")
+    Rel(spa, ad, "Authenticated by", "MSAL")
+    Rel(spfx, api, "Uses", "JSON/HTTPS")
+    Rel(spfx, ad, "Authenticated by", "MSAL")
+
+}
+
+Rel(pbc, spa, "Uses")
+Rel(doc, spfx, "Uses")
+Rel(admin, spfx, "Uses")
+Rel(es, pbc, "Sends e-mails to")
+Rel(es, doc, "Sends e-mails to")
+Rel(api, xero, "Sends invoices to")
+@enduml
